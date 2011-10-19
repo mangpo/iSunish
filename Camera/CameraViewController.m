@@ -9,6 +9,24 @@
 #import "CameraViewController.h"
 
 @implementation CameraViewController
+@synthesize theimageView, choosePhoto, takePhoto;
+
+-(IBAction) getPhoto:(id)sender {
+    UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+    
+    if((UIButton *) sender == choosePhoto) {
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentModalViewController:picker animated:YES];
+    } else {
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentModalViewController:picker animated:YES];
+    }
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissModalViewControllerAnimated:YES];
+    theimageView = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+}
 
 - (void)dealloc
 {

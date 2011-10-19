@@ -39,20 +39,20 @@
 		D79C09FF144F76D300903952 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D79C0A01144F76D300903952 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D79C0A03144F76D300903952 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		D79C0A07144F76D300903952 /* Camera-Info.plist */ = {isa = PBXFileReference; path = "Camera-Info.plist"; sourceTree = "<group>"; };
+		D79C0A07144F76D300903952 /* Camera-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Camera-Info.plist"; sourceTree = "<group>"; };
 		D79C0A09144F76D300903952 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D79C0A0B144F76D300903952 /* Camera-Prefix.pch */ = {isa = PBXFileReference; path = "Camera-Prefix.pch"; sourceTree = "<group>"; };
+		D79C0A0B144F76D300903952 /* Camera-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Camera-Prefix.pch"; sourceTree = "<group>"; };
 		D79C0A0C144F76D300903952 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D79C0A0E144F76D300903952 /* CameraAppDelegate.h */ = {isa = PBXFileReference; path = CameraAppDelegate.h; sourceTree = "<group>"; };
+		D79C0A0E144F76D300903952 /* CameraAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraAppDelegate.h; sourceTree = "<group>"; };
 		D79C0A0F144F76D400903952 /* CameraAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraAppDelegate.m; sourceTree = "<group>"; };
 		D79C0A12144F76D400903952 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		D79C0A14144F76D400903952 /* CameraViewController.h */ = {isa = PBXFileReference; path = CameraViewController.h; sourceTree = "<group>"; };
+		D79C0A14144F76D400903952 /* CameraViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 		D79C0A15144F76D400903952 /* CameraViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
 		D79C0A18144F76D400903952 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CameraViewController.xib; sourceTree = "<group>"; };
 		D79C0A1F144F76D400903952 /* CameraTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D79C0A27144F76D400903952 /* CameraTests-Info.plist */ = {isa = PBXFileReference; path = "CameraTests-Info.plist"; sourceTree = "<group>"; };
+		D79C0A27144F76D400903952 /* CameraTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CameraTests-Info.plist"; sourceTree = "<group>"; };
 		D79C0A29144F76D400903952 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D79C0A2B144F76D400903952 /* CameraTests-Prefix.pch */ = {isa = PBXFileReference; path = "CameraTests-Prefix.pch"; sourceTree = "<group>"; };
+		D79C0A2B144F76D400903952 /* CameraTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CameraTests-Prefix.pch"; sourceTree = "<group>"; };
 		D79C0A2C144F76D400903952 /* CameraTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraTests.h; sourceTree = "<group>"; };
 		D79C0A2E144F76D400903952 /* CameraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
