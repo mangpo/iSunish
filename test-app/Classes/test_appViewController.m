@@ -95,9 +95,9 @@
 
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue
 {
-    double r = (float) red;
-    double g = (float) green;
-    double b = (float) blue;
+    double r = red/255.0;
+    double g = green/255.0;
+    double b = blue/255.0;
     return atan2((2*r - g - b)/2, sqrt(3)/2 * (g - b));
 }
 
@@ -120,16 +120,16 @@
             blue += pixelBytes[index+2];
             count++;
         }
-    red /= count;
-    green /= count;
-    blue /= count;
+    red /= count*255;
+    green /= count*255;
+    blue /= count*255;
     return atan2((2*red - green - blue)/2, sqrt(3)/2 * (green - blue));
 }
 
 
 - (id)init
 {
-  if (self = [super init]) 
+  if ((self = [super init])) 
   {
     self.view = [[[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]] autorelease];
 		self.view.backgroundColor = [UIColor grayColor];
