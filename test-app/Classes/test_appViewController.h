@@ -18,6 +18,7 @@
 -(void) getColor:(UIImage*) image;
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue;
 -(double) getAverageHue:(unsigned char*)pixelBytes row:(int) row col:(int) col;
+-(NSString*) getColorFromHue:(double) hue;
 
 @end
 

@@ -57,6 +57,7 @@
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSLog(@"HARRO");
+
 	// Access the uncropped image from info dictionary
 	UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
 
@@ -74,6 +75,7 @@
     
     width = CGImageGetWidth(imageRef);
     height = CGImageGetHeight(imageRef);
+    CGImageRelease(imageRef);
     int bytesPerPixel = 4;
     bytesPerRow = bytesPerPixel * width;
     int index = height/2*bytesPerRow + width/2*bytesPerPixel;
@@ -83,14 +85,73 @@
     double averageHue = [self getAverageHue:pixelBytes row:height/2 col:width/2];
     printf("average hue around pixel(%d,%d) = %.2lf\n",height/2,width/2,averageHue);
     
-    // Take away the red pixel, assuming 32-bit RGBA
-    /*for(int i = 0; i < [pixelData length]; i += 4) {
-     pixelBytes[i] = pixelBytes[i]; // red
-     pixelBytes[i+1] = pixelBytes[i+1]; // green
-     pixelBytes[i+2] = pixelBytes[i+2]; // blue
-     pixelBytes[i+3] = pixelBytes[i+3]; // alpha
-     printf("%c ",pixelBytes[i]); 
-     }*/
+    NSLog([self getColorFromHue:averageHue]);
+}
+
+-(NSString*) getColorFromHue:(double) hue
+{
+    hue = hue/3.14159265*180;
+    NSString *s;
+    s = @"red";
+    if(hue < 15)
+        s = @"red";
+    else if(hue < 37.5)
+        s = @"orange";
+    else if(hue < 52.5)
+        s = @"gold";
+    else if(hue < 60)
+        s = @"yellow";
+    else if(hue < 67.5)
+        s = @"apple greem";
+    else if(hue < 75)
+        s = @"lime green";
+    else if(hue < 82.5)
+        s = @"spring bud green";
+    else if(hue < 97.5)
+        s = @"pistachio green";
+    else if(hue < 120)
+        s = @"green";
+    else if(hue < 135)
+        s = @"emerald green";
+    else if(hue < 142.5)
+        s = @"sea green";
+    else if(hue < 150)
+        s = @"spring green";
+    else if(hue < 157.5)
+        s = @"aquamarine";
+    else if(hue < 165)
+        s = @"turquoise";
+    else if(hue < 172.5)
+        s = @"opal";
+    else if(hue < 180)
+        s = @"cyan";
+    else if(hue < 195)
+        s = @"arctic blue";
+    else if(hue < 210)
+        s = @"azure";
+    else if(hue < 247.5)
+        s = @"blue";
+    else if(hue < 255)
+        s = @"indigo";
+    else if(hue < 262.5)
+        s = @"blue violet";
+    else if(hue < 270)
+        s = @"violet";
+    else if(hue < 285)
+        s = @"purple";
+    else if(hue < 300)
+        s = @"magenta";
+    else if(hue < 315)
+        s = @"orchid pink";
+    else if(hue < 322.5)
+        s = @"rose pink";
+    else if(hue < 337.5)
+        s = @"rasberry";
+    else if(hue < 345)
+        s = @"crimson";
+    else
+        s = @"red";
+    return s;
 }
 
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue
@@ -141,7 +202,7 @@
     [self.view addSubview:button];
     [button release];
   }
-  
+    NSLog([self getColorFromHue:6.2]);
   return self;  
 }
 
