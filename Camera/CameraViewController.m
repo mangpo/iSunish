@@ -16,6 +16,7 @@
     
     if((UIButton *) sender == choosePhoto) {
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        NSLog(@"Wassap fool!");
         [self presentModalViewController:picker animated:YES];
     } else {
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
