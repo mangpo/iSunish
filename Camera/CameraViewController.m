@@ -19,13 +19,16 @@
         NSLog(@"Wassap fool!");
         [self presentModalViewController:picker animated:YES];
     } else {
+                NSLog(@"takin a pic bitch!");
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         [self presentModalViewController:picker animated:YES];
     }
 }
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    NSLog(@"im right here bitch!");
     [picker dismissModalViewControllerAnimated:YES];
+    [picker release];
     theimageView = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     UIImage* image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     
