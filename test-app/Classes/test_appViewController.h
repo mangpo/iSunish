@@ -7,12 +7,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class FliteTTS;
+
+FliteTTS *fliteEngine;
+
 @interface test_appViewController : UIViewController  <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
 	UIButton *button;
     int height,width,bytesPerRow;
 
 }
+
 @property (nonatomic, readwrite) int height, width, bytesPerRow;
 
 -(void) getColor:(UIImage*) image;

@@ -1,12 +1,5 @@
-//
-//  test_appViewController.m
-//  test-app
-//
-//  Copyright iPhoneDevTips.com All rights reserved.
-//
-
-
 #import "test_appViewController.h"
+#import "FliteTTS.h"
 
 @implementation test_appViewController
 @synthesize width, height, bytesPerRow;
@@ -69,6 +62,9 @@
 
 -(void)getColor:(UIImage*)image
 {
+    [fliteEngine speakText:@"dude the color is red."];	// Make it talk
+    NSLog(@"finishe dtalking");
+
     NSData* pixelData = (NSData*) CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage));
     unsigned char* pixelBytes = (unsigned char *)[pixelData bytes];
     CGImageRef imageRef = [image CGImage];
@@ -210,8 +206,12 @@
     [self.view addSubview:button];
     [button release];
       
+      
     //speech synthesis
-      //synth = [[NSSpeechSynthesizer alloc] init];
+      fliteEngine=[[FliteTTS alloc] init];
+      [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
+      [fliteEngine speakText:@"The color is Red"];
+      NSLog(@"finishe dtalking");
       
   }
     NSLog([self getColorFromHue:6.2]);
