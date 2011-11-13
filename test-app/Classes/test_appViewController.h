@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HSL.h"
 
 @class FliteTTS;
 
@@ -24,6 +25,7 @@ FliteTTS *fliteEngine;
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue;
 -(double) getAverageHue:(unsigned char*)pixelBytes row:(int) row col:(int) col;
 -(NSString*) getColorFromHue:(double) hue;
+-(NSString*) getColorFromHSL:(HSL*) hsl;
 
 @end
 

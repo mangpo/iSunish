@@ -70,26 +70,138 @@
     CGImageRef imageRef = [image CGImage];
     
     width = CGImageGetWidth(imageRef);
-    height = CGImageGetHeight(imageRef);
-    CGImageRelease(imageRef);
-    int bytesPerPixel = 4;
+    height = CGImageGetHeight(imageRef);    int bytesPerPixel = 4;
     bytesPerRow = bytesPerPixel * width;
     int index = height/2*bytesPerRow + width/2*bytesPerPixel;
-    printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
-    double hue = [self getHueFromRed:pixelBytes[index] green:pixelBytes[index+1] blue:pixelBytes[index+2]];
-    printf("hue at pixel(%d,%d) = %.2lf\n",height/2,width/2,hue);
+    //printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
+    //double hue = [self getHueFromRed:pixelBytes[index] green:pixelBytes[index+1] blue:pixelBytes[index+2]];
+    //printf("hue at pixel(%d,%d) = %.2lf\n",height/2,width/2,hue);
     
-    double averageHue = [self getAverageHue:pixelBytes row:height/2 col:width/2];
-    printf("average hue around pixel(%d,%d) = %.2lf\n",height/2,width/2,averageHue);
+    //double averageHue = [self getAverageHue:pixelBytes row:height/2 col:width/2];
+    HSL *hsl = [self getAverageHSL:pixelBytes row:height/2 col:width/2];
+    double averageHue = [hsl hue];
+    printf("average color around pixel(%d,%d)\n",height/2,width/2);
     
     NSLog([self getColorFromHue:averageHue]);
+    NSLog([self getColorFromHSL:hsl]);
+    CGImageRelease(imageRef);
+
+}
+
+-(NSString*) getColorFromHSL:(HSL *)hsl
+{
+    double light= [hsl light];
+    double sat = [hsl saturation];
+    double hue = [hsl hue];
+    NSString * s;
+    if(light < 1){
+        s = @"black";
+    }
+    else if(light < 5){
+        if(sat < 50){
+            s = @"black";
+        }
+        else{
+            s = @"dark ";
+            s = [s stringByAppendingString:[self getColorFromHue:hue]];
+        }
+    }
+    else if(light < 15){
+        if(sat < 10){
+            s = @"black";
+        }
+        else if(sat < 30){
+            s = @"dark ";
+            s = [s stringByAppendingString:[self getColorFromHue:hue]];
+        }
+        else{
+            s = [self getColorFromHue:hue];
+        }
+    }
+    else if(light < 75){
+        if(sat < 10){
+            s = @"grey";
+        }
+        else if(sat < 20){
+            s = @"greyish ";
+            s = [s stringByAppendingString:[self getColorFromHue:hue]];
+        }
+        else{
+            s = [self getColorFromHue:hue];
+        }    
+    }
+    else if(light < 80){
+        if(sat < 10){
+            s = @"grey";
+        }
+        else if(sat < 30){
+            s = @"light ";
+            s = [s stringByAppendingString:[self getColorFromHue:hue]];
+        }
+        else{
+            s = [self getColorFromHue:hue];
+        } 
+    }
+    else if(light < 90){
+        if(sat < 15){
+            s = @"light grey";
+        }
+        else if(sat < 50){
+            s = @"light ";
+            s = [s stringByAppendingString:[self getColorFromHue:hue]];
+        }
+        else{
+            s = [self getColorFromHue:hue];
+        } 
+    }
+    else if(light < 95){
+        if(sat < 50){
+            s = @"white";
+        }
+        else{
+            s = @"light ";
+            s = [s stringByAppendingString:[self getColorFromHue:hue]];
+        }
+    }
+    else{
+        s = @"white";
+    }
+    
+    // Red or Brown
+    if(hue < 15 || hue > 345){
+        if(light < 15){
+            if(sat < 10){
+                s = @"black";
+            }
+            else if(sat < 50){
+                s = @"brown";
+            }
+            else{
+                s = @"red";
+            } 
+        }
+        else if(light < 30){
+            if(sat < 10){
+                s = @"grey";
+            }
+            else if(sat < 20){
+                s = @"greyish brown";
+            }
+            else if(sat < 50){
+                s = @"brown";
+            }
+            else{
+                s = @"red";
+            } 
+        }
+    }
+    return s;
 }
 
 -(NSString*) getColorFromHue:(double) hue
 {
     //hue = hue/3.14159265*180;
     NSString *s;
-    s = @"red";
     if(hue < 15)
         s = @"red";
     else if(hue < 37.5)
@@ -106,16 +218,8 @@
         s = @"spring bud green";
     else if(hue < 97.5)
         s = @"pistachio green";
-    else if(hue < 120)
-        s = @"green";
-    else if(hue < 135)
-        s = @"emerald green";
-    else if(hue < 142.5)
-        s = @"sea green";
-    else if(hue < 150)
-        s = @"spring green";
     else if(hue < 157.5)
-        s = @"aquamarine";
+        s = @"green";
     else if(hue < 165)
         s = @"turquoise";
     else if(hue < 172.5)
@@ -156,7 +260,6 @@
     double r = red;
     double g = green;
     double b = blue;
-    printf("after hue %f %f %f, cal %f %f %f\n",r,g,b,(2*r - g - b),sqrt(3) * (g - b),atan2(sqrt(3) * (g - b),(2*r - g - b)));
     double hue = atan2(sqrt(3) * (g - b),(2*r - g - b))/3.14159265*180;
     if(hue < 0)
         hue += 360;
@@ -188,9 +291,53 @@
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
         hue += 360;
+    printf("H = %.2f\n",hue);
     return hue;
 }
 
+-(HSL*) getAverageHSL:(unsigned char*)pixelBytes row:(int) row col:(int) col
+{
+    HSL *hsl = [[HSL alloc] init];    int row_min = (row > 0)? row-1:0;
+    int row_max = (row + 1 < height)? row+1:height-1;
+    int col_min = (col > 0)? col-1:0;
+    int col_max = (col + 1 < width)? col+1:width-1;
+    int bytesPerPixel = 4;
+    double red = 0, green = 0, blue = 0;
+    int count = 0;
+    
+    for(int i = row_min; i <= row_max; i++)
+        for(int j = col_min; j <= col_max; j++) {
+            int index = i*bytesPerRow + j*bytesPerPixel;
+            red += pixelBytes[index];
+            green += pixelBytes[index+1];
+            blue += pixelBytes[index+2];
+            count++;
+        }
+    red /= count*255;
+    green /= count*255;
+    blue /= count*255;
+    double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
+    if(hue < 0)
+        hue += 360;
+    
+    double M = MAX(MAX(red,green),blue);
+    double m = MIN(MIN(red,green),blue);
+    double light = (M + m)/2;
+    
+    double C = M - m;
+    double sat = (C == 0)? 0: C/(1 - ABS(2*light - 1)); 
+    
+    light *= 100;
+    sat *= 100;
+    
+    [hsl setHue:hue];
+    [hsl setLight:light];
+    [hsl setSaturation:sat];
+    
+    printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
+
+    return hsl;
+}
 
 - (id)init
 {
@@ -214,7 +361,6 @@
       NSLog(@"finishe dtalking");
       
   }
-    NSLog([self getColorFromHue:6.2]);
   return self;  
 }
 
