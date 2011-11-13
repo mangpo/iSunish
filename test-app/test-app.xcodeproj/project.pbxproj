@@ -19,6 +19,7 @@
 		52E16F19106E44A300EADDF5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E16F18106E44A300EADDF5 /* QuartzCore.framework */; };
 		52E6B40110964E0400788E04 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E6B40010964E0400788E04 /* CFNetwork.framework */; };
 		52E6B42610964E2300788E04 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E6B42510964E2300788E04 /* SystemConfiguration.framework */; };
+		5E8F4836146F912300D76412 /* HSL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F4835146F912300D76412 /* HSL.m */; };
 		5EEAA2B3146F68D000436F24 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EEAA2B2146F68CF00436F24 /* AVFoundation.framework */; };
 		5EEAA581146F741800436F24 /* au_none.c in Sources */ = {isa = PBXBuildFile; fileRef = 5EEAA4FD146F741800436F24 /* au_none.c */; };
 		5EEAA582146F741800436F24 /* au_streaming.c in Sources */ = {isa = PBXBuildFile; fileRef = 5EEAA4FE146F741800436F24 /* au_streaming.c */; };
@@ -112,6 +113,8 @@
 		52E16F18106E44A300EADDF5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		52E6B40010964E0400788E04 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		52E6B42510964E2300788E04 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		5E8F4834146F912300D76412 /* HSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSL.h; sourceTree = "<group>"; };
+		5E8F4835146F912300D76412 /* HSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSL.m; sourceTree = "<group>"; };
 		5EEAA2B0146F68BD00436F24 /* AVFoundation */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = AVFoundation; path = System/Library/Frameworks/AVFoundation.framework/AVFoundation; sourceTree = SDKROOT; };
 		5EEAA2B2146F68CF00436F24 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5EEAA4D5146F741800436F24 /* cst_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cst_alloc.h; sourceTree = "<group>"; };
@@ -270,6 +273,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5E8F4834146F912300D76412 /* HSL.h */,
+				5E8F4835146F912300D76412 /* HSL.m */,
 				5EEAA5E1146F742000436F24 /* FliteTTS.h */,
 				5EEAA5E2146F742000436F24 /* FliteTTS.m */,
 				1D3623240D0F684500981E51 /* test_appAppDelegate.h */,
@@ -652,6 +657,7 @@
 				5EEAA5DF146F741800436F24 /* us_text.c in Sources */,
 				5EEAA5E0146F741800436F24 /* usenglish.c in Sources */,
 				5EEAA5E3146F742000436F24 /* FliteTTS.m in Sources */,
+				5E8F4836146F912300D76412 /* HSL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

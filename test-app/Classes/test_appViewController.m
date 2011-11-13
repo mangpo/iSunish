@@ -62,9 +62,6 @@
 
 -(void)getColor:(UIImage*)image
 {
-    [fliteEngine speakText:@"dude the color is red."];	// Make it talk
-    NSLog(@"finishe dtalking");
-
     NSData* pixelData = (NSData*) CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage));
     unsigned char* pixelBytes = (unsigned char *)[pixelData bytes];
     CGImageRef imageRef = [image CGImage];
@@ -82,8 +79,9 @@
     double averageHue = [hsl hue];
     printf("average color around pixel(%d,%d)\n",height/2,width/2);
     
-    NSLog([self getColorFromHue:averageHue]);
-    NSLog([self getColorFromHSL:hsl]);
+    //NSLog([self getColorFromHue:averageHue]);
+    [fliteEngine speakText:[self getColorFromHSL:hsl]];
+    //NSLog([self getColorFromHSL:hsl]);
     CGImageRelease(imageRef);
 
 }
@@ -357,9 +355,7 @@
     //speech synthesis
       fliteEngine=[[FliteTTS alloc] init];
       [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
-      [fliteEngine speakText:@"The color is Red"];
-      NSLog(@"finishe dtalking");
-      
+
   }
   return self;  
 }
