@@ -79,6 +79,7 @@
     int bytesPerPixel = 4;
     bytesPerRow = bytesPerPixel * width;
     int index = height/2*bytesPerRow + width/2*bytesPerPixel;
+    printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
     double hue = [self getHueFromRed:pixelBytes[index] green:pixelBytes[index+1] blue:pixelBytes[index+2]];
     printf("hue at pixel(%d,%d) = %.2lf\n",height/2,width/2,hue);
     
@@ -90,7 +91,7 @@
 
 -(NSString*) getColorFromHue:(double) hue
 {
-    hue = hue/3.14159265*180;
+    //hue = hue/3.14159265*180;
     NSString *s;
     s = @"red";
     if(hue < 15)
@@ -156,10 +157,14 @@
 
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue
 {
-    double r = red/255.0;
-    double g = green/255.0;
-    double b = blue/255.0;
-    return atan2((2*r - g - b)/2, sqrt(3)/2 * (g - b));
+    double r = red;
+    double g = green;
+    double b = blue;
+    printf("after hue %f %f %f, cal %f %f %f\n",r,g,b,(2*r - g - b),sqrt(3) * (g - b),atan2(sqrt(3) * (g - b),(2*r - g - b)));
+    double hue = atan2(sqrt(3) * (g - b),(2*r - g - b))/3.14159265*180;
+    if(hue < 0)
+        hue += 360;
+    return hue;
 }
 
 -(double) getAverageHue:(unsigned char*)pixelBytes row:(int) row col:(int) col
@@ -184,7 +189,10 @@
     red /= count*255;
     green /= count*255;
     blue /= count*255;
-    return atan2((2*red - green - blue)/2, sqrt(3)/2 * (green - blue));
+    double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
+    if(hue < 0)
+        hue += 360;
+    return hue;
 }
 
 
@@ -201,6 +209,10 @@
     [button addTarget:self action:@selector(buttonPressed:) forControlEvents: UIControlEventTouchUpInside];      
     [self.view addSubview:button];
     [button release];
+      
+    //speech synthesis
+      //synth = [[NSSpeechSynthesizer alloc] init];
+      
   }
     NSLog([self getColorFromHue:6.2]);
   return self;  
