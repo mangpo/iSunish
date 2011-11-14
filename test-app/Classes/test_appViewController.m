@@ -76,14 +76,12 @@
     
     //double averageHue = [self getAverageHue:pixelBytes row:height/2 col:width/2];
     HSL *hsl = [self getAverageHSL:pixelBytes row:height/2 col:width/2];
-    double averageHue = [hsl hue];
+    //double averageHue = [hsl hue];
     printf("average color around pixel(%d,%d)\n",height/2,width/2);
     
-    //NSLog([self getColorFromHue:averageHue]);
     [fliteEngine speakText:[self getColorFromHSL:hsl]];
     //NSLog([self getColorFromHSL:hsl]);
-    CGImageRelease(imageRef);
-
+    //CGImageRelease(imageRef);
 }
 
 -(NSString*) getColorFromHSL:(HSL *)hsl
@@ -104,11 +102,11 @@
             s = [s stringByAppendingString:[self getColorFromHue:hue]];
         }
     }
-    else if(light < 15){
-        if(sat < 10){
+    else if(light < 40){
+        if(sat < 15){
             s = @"black";
         }
-        else if(sat < 30){
+        else if(sat < 35){
             s = @"dark ";
             s = [s stringByAppendingString:[self getColorFromHue:hue]];
         }
@@ -117,7 +115,10 @@
         }
     }
     else if(light < 75){
-        if(sat < 10){
+        if(sat < 2.5){
+            s = @"dark grey";
+        }
+        else if(sat < 10){
             s = @"grey";
         }
         else if(sat < 20){
@@ -206,9 +207,9 @@
         s = @"orange";
     else if(hue < 52.5)
         s = @"gold";
-    else if(hue < 60)
+    else if(hue < 65)
         s = @"yellow";
-    else if(hue < 67.5)
+    else if(hue < 70)
         s = @"apple greem";
     else if(hue < 75)
         s = @"lime green";
@@ -242,11 +243,13 @@
         s = @"magenta";
     else if(hue < 315)
         s = @"orchid pink";
-    else if(hue < 322.5)
+    else if(hue < 335)
+        s = @"pink";
+    else if(hue < 342.5)
         s = @"rose pink";
-    else if(hue < 337.5)
+    else if(hue < 350)
         s = @"rasberry";
-    else if(hue < 345)
+    else if(hue < 352.5)
         s = @"crimson";
     else
         s = @"red";
@@ -267,10 +270,10 @@
 -(double) getAverageHue:(unsigned char*)pixelBytes row:(int) row col:(int) col
 {
     // 9-points average
-    int row_min = (row > 0)? row-1:0;
-    int row_max = (row + 1 < height)? row+1:height-1;
-    int col_min = (col > 0)? col-1:0;
-    int col_max = (col + 1 < width)? col+1:width-1;
+    int row_min = (row - RADIUS >= 0)? row-RADIUS:0;
+    int row_max = (row + RADIUS < height)? row+RADIUS: height-1;
+    int col_min = (col - RADIUS >= 0)? col-RADIUS:0;
+    int col_max = (col + RADIUS < width)? col+RADIUS: width-1;
     int bytesPerPixel = 4;
     double red = 0, green = 0, blue = 0;
     int count = 0;
@@ -295,10 +298,11 @@
 
 -(HSL*) getAverageHSL:(unsigned char*)pixelBytes row:(int) row col:(int) col
 {
-    HSL *hsl = [[HSL alloc] init];    int row_min = (row > 0)? row-1:0;
-    int row_max = (row + 1 < height)? row+1:height-1;
-    int col_min = (col > 0)? col-1:0;
-    int col_max = (col + 1 < width)? col+1:width-1;
+    HSL *hsl = [[HSL alloc] init];
+    int row_min = (row - RADIUS >= 0)? row-RADIUS:0;
+    int row_max = (row + RADIUS < height)? row+RADIUS: height-1;
+    int col_min = (col - RADIUS >= 0)? col-RADIUS:0;
+    int col_max = (col + RADIUS < width)? col+RADIUS: width-1;
     int bytesPerPixel = 4;
     double red = 0, green = 0, blue = 0;
     int count = 0;
@@ -332,6 +336,7 @@
     [hsl setLight:light];
     [hsl setSaturation:sat];
     
+    printf("averaging over [%d,%d] [%d,%d]\n",row_min,row_max,col_min,col_max);
     printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
 
     return hsl;
