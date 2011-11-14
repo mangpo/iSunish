@@ -115,7 +115,6 @@
 		52E6B42510964E2300788E04 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5E8F4834146F912300D76412 /* HSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSL.h; sourceTree = "<group>"; };
 		5E8F4835146F912300D76412 /* HSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSL.m; sourceTree = "<group>"; };
-		5EEAA2B0146F68BD00436F24 /* AVFoundation */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = AVFoundation; path = System/Library/Frameworks/AVFoundation.framework/AVFoundation; sourceTree = SDKROOT; };
 		5EEAA2B2146F68CF00436F24 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5EEAA4D5146F741800436F24 /* cst_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cst_alloc.h; sourceTree = "<group>"; };
 		5EEAA4D6146F741800436F24 /* cst_audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cst_audio.h; sourceTree = "<group>"; };
@@ -301,9 +300,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				52E6B42510964E2300788E04 /* SystemConfiguration.framework */,
-				5EEAA2B0146F68BD00436F24 /* AVFoundation */,
-				5EEAA2B2146F68CF00436F24 /* AVFoundation.framework */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -330,6 +326,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				52E6B42510964E2300788E04 /* SystemConfiguration.framework */,
+				5EEAA2B2146F68CF00436F24 /* AVFoundation.framework */,
 				5259454E109BB32800279F2E /* MessageUI.framework */,
 				52E16F18106E44A300EADDF5 /* QuartzCore.framework */,
 				52E6B40010964E0400788E04 /* CFNetwork.framework */,
