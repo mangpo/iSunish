@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "HSL.h"
+#define RADIUS 30
 
 @class FliteTTS;
 
