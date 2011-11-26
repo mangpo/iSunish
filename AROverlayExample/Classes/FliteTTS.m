@@ -29,11 +29,11 @@
 #import "FliteTTS.h"
 #import "flite.h"
 
-//cst_voice *register_cmu_us_kal();
+cst_voice *register_cmu_us_kal();
 //cst_voice *register_cmu_us_kal16();
 //cst_voice *register_cmu_us_rms();
 //cst_voice *register_cmu_us_awb();
-cst_voice *register_cmu_us_slt();
+//cst_voice *register_cmu_us_slt();
 cst_wave *sound;
 cst_voice *voice;
 
@@ -48,7 +48,7 @@ cst_voice *voice;
 	//voice = register_cmu_us_kal16();
 	//voice = register_cmu_us_rms();
 	//voice = register_cmu_us_awb();
-	voice = register_cmu_us_slt();
+	voice = register_cmu_us_kal();
 	//[self setVoice:@"cmu_us_slt"];
     return self;
 }
