@@ -9,6 +9,7 @@
 @synthesize stillImageOutput;
 @synthesize stillImage;
 @synthesize width, height, bytesPerRow;
+@synthesize refR, refG, refB;
 
 #pragma mark Capture Session Configuration
 
@@ -18,7 +19,15 @@
         //speech synthesis
         fliteEngine=[[FliteTTS alloc] init];
         [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
-
+        refR = 0;
+        refG = 0;
+        refB = 0;
+        /*[self fromR:81 fromG:92 fromB:129];
+        [self fromR:168 fromG:166 fromB:173];
+        [self fromR:38 fromG:37 fromB:53];*/
+        [self fromR:102 fromG:109 fromB:125];
+        [self fromR:141 fromG:145 fromB:150];
+        [self fromR:177 fromG:184 fromB:185];
 	}
 	return self;
 }
@@ -103,8 +112,7 @@
                                                            width = CGImageGetWidth(imageRef);
                                                            height = CGImageGetHeight(imageRef);    int bytesPerPixel = 4;
                                                            bytesPerRow = bytesPerPixel * width;
-                                                           int index = height/2*bytesPerRow + width/2*bytesPerPixel;
-                                                           printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
+                                                           int index = height/2*bytesPerRow + width/2*bytesPerPixel;                                                           printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
                                                            //double hue = [self getHueFromRed:pixelBytes[index] green:pixelBytes[index+1] blue:pixelBytes[index+2]];
                                                            //printf("hue at pixel(%d,%d) = %.2lf\n",height/2,width/2,hue);
                                                            
@@ -249,18 +257,16 @@
         s = @"red";
     else if(hue < 37.5)
         s = @"orange";
-    else if(hue < 52.5)
+    else if(hue < 44)
         s = @"gold";
+    else if(hue < 52.5)
+        s = @"tan";
     else if(hue < 65)
         s = @"yellow";
     else if(hue < 70)
         s = @"apple greem";
     else if(hue < 75)
         s = @"lime green";
-    else if(hue < 82.5)
-        s = @"spring bud green";
-    else if(hue < 97.5)
-        s = @"pistachio green";
     else if(hue < 157.5)
         s = @"green";
     else if(hue < 165)
@@ -333,11 +339,50 @@
     red /= count*255;
     green /= count*255;
     blue /= count*255;
+    
+    // Calibrate color according to reference
+    red += refR;
+    green += refG;
+    blue += refB;
+    
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
         hue += 360;
     printf("H = %.2f\n",hue);
     return hue;
+}
+
+-(void) fromR:(double) red fromG:(double) green fromB:(double) blue
+{
+    
+    red /= 255;
+    green /= 255;
+    blue /= 255;
+    // Calibrate color according to reference
+    red += refR;
+    green += refG;
+    blue += refB;
+    
+    double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
+    if(hue < 0)
+        hue += 360;
+    
+    double M = MAX(MAX(red,green),blue);
+    double m = MIN(MIN(red,green),blue);
+    double light = (M + m)/2;
+    
+    double C = M - m;
+    double sat = (C == 0)? 0: C/(1 - ABS(2*light - 1)); 
+    
+    light *= 100;
+    sat *= 100;
+    printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
+    
+    HSL *hsl = [[HSL alloc] init];
+    [hsl setHue:hue];
+    [hsl setLight:light];
+    [hsl setSaturation:sat];
+    NSLog([self getColorFromHSL:hsl]);
 }
 
 -(HSL*) getAverageHSL:(unsigned char*)pixelBytes row:(int) row col:(int) col
@@ -362,6 +407,12 @@
     red /= count*255;
     green /= count*255;
     blue /= count*255;
+    
+    // Calibrate color according to reference
+    red += refR;
+    green += refG;
+    blue += refB;
+    
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
         hue += 360;
@@ -385,8 +436,6 @@
     
     return hsl;
 }
-
-
 
 - (void)dealloc {
 
