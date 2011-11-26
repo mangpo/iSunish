@@ -17,10 +17,16 @@
 		[self setCaptureSession:[[AVCaptureSession alloc] init]];
         //speech synthesis
         fliteEngine=[[FliteTTS alloc] init];
-        [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
+        [fliteEngine setPitch:100.0 variance:50.0 speed:1.4];	// Change the voice 
 
 	}
 	return self;
+}
+
+- (void)speak:(NSString *)message {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; 
+    [fliteEngine speakText:message];    
+    [pool release];
 }
 
 - (void)addVideoPreviewLayer {
@@ -88,11 +94,11 @@
 	[[self stillImageOutput] captureStillImageAsynchronouslyFromConnection:videoConnection 
                                                        completionHandler:^(CMSampleBufferRef imageSampleBuffer, NSError *error) { 
                                                          CFDictionaryRef exifAttachments = CMGetAttachment(imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);
-                                                         if (exifAttachments) {
+                                                         /*if (exifAttachments) {
                                                            NSLog(@"attachements: %@", exifAttachments);
                                                          } else { 
                                                            NSLog(@"no attachments");
-                                                         }
+                                                         }*/
                                                          NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];    
                                                            UIImage *image = [[UIImage alloc] initWithData:imageData];
                                                            NSData* pixelData = (NSData*) CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage));
@@ -104,26 +110,22 @@
                                                            height = CGImageGetHeight(imageRef);    int bytesPerPixel = 4;
                                                            bytesPerRow = bytesPerPixel * width;
                                                            int index = height/2*bytesPerRow + width/2*bytesPerPixel;
-                                                           printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
+                                                          // printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
                                                            //double hue = [self getHueFromRed:pixelBytes[index] green:pixelBytes[index+1] blue:pixelBytes[index+2]];
                                                            //printf("hue at pixel(%d,%d) = %.2lf\n",height/2,width/2,hue);
                                                            
                                                            //double averageHue = [self getAverageHue:pixelBytes row:height/2 col:width/2];
                                                            HSL *hsl = [self getAverageHSL:pixelBytes row:height/2 col:width/2];
                                                            //double averageHue = [hsl hue];
-                                                           printf("average color around pixel(%d,%d)\n",height/2,width/2);
-                                                           NSLog([self getColorFromHSL:hsl]);
-                                                           [fliteEngine speakText:[self getColorFromHSL:hsl]];
+                                                           //printf("average color around pixel(%d,%d)\n",height/2,width/2);
+                                                           //NSLog([self getColorFromHSL:hsl]);
+                                                           [self performSelectorInBackground:@selector(speak:) withObject:[self getColorFromHSL:hsl]];
+
+                                                           //[fliteEngine speakText:[self getColorFromHSL:hsl]];
                                                            //NSLog([self getColorFromHSL:hsl]);
                                                            //CGImageRelease(imageRef);
-                                                           
-                                                           
-                                                           
-                                                           
-                                                           
                                                          [self setStillImage:image];
                                                          [image release];
-                                                         [[NSNotificationCenter defaultCenter] postNotificationName:kImageCapturedSuccessfully object:nil];
                                                        }];
 }
 
@@ -380,8 +382,8 @@
     [hsl setLight:light];
     [hsl setSaturation:sat];
     
-    printf("averaging over [%d,%d] [%d,%d]\n",row_min,row_max,col_min,col_max);
-    printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
+    //printf("averaging over [%d,%d] [%d,%d]\n",row_min,row_max,col_min,col_max);
+    //printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
     
     return hsl;
 }
