@@ -9,7 +9,7 @@
 @synthesize stillImageOutput;
 @synthesize stillImage;
 @synthesize width, height, bytesPerRow;
-@synthesize refR, refG, refB;
+@synthesize refR, refG, refB, settings, customType;
 
 #pragma mark Capture Session Configuration
 
@@ -22,12 +22,13 @@
         refR = 0;
         refG = 0;
         refB = 0;
+        settings = NO;
         /*[self fromR:81 fromG:92 fromB:129];
         [self fromR:168 fromG:166 fromB:173];
         [self fromR:38 fromG:37 fromB:53];*/
-        [self fromR:102 fromG:109 fromB:125];
+        /*[self fromR:102 fromG:109 fromB:125];
         [self fromR:141 fromG:145 fromB:150];
-        [self fromR:177 fromG:184 fromB:185];
+        [self fromR:177 fromG:184 fromB:185];*/
 	}
 	return self;
 }
@@ -113,21 +114,16 @@
                                                            height = CGImageGetHeight(imageRef);    int bytesPerPixel = 4;
                                                            bytesPerRow = bytesPerPixel * width;
                                                            int index = height/2*bytesPerRow + width/2*bytesPerPixel;                                                           printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
-                                                           //double hue = [self getHueFromRed:pixelBytes[index] green:pixelBytes[index+1] blue:pixelBytes[index+2]];
-                                                           //printf("hue at pixel(%d,%d) = %.2lf\n",height/2,width/2,hue);
                                                            
-                                                           //double averageHue = [self getAverageHue:pixelBytes row:height/2 col:width/2];
+                                                           if(settings) {
+                                                               [self setReference:pixelBytes row:height/2 col:width/2];
+                                                           }
+                                                           else {
                                                            HSL *hsl = [self getAverageHSL:pixelBytes row:height/2 col:width/2];
-                                                           //double averageHue = [hsl hue];
                                                            printf("average color around pixel(%d,%d)\n",height/2,width/2);
                                                            NSLog([self getColorFromHSL:hsl]);
                                                            [fliteEngine speakText:[self getColorFromHSL:hsl]];
-                                                           //NSLog([self getColorFromHSL:hsl]);
-                                                           //CGImageRelease(imageRef);
-                                                           
-                                                           
-                                                           
-                                                           
+                                                           }
                                                            
                                                          [self setStillImage:image];
                                                          [image release];
@@ -354,14 +350,14 @@
 
 -(void) fromR:(double) red fromG:(double) green fromB:(double) blue
 {
-    
-    red /= 255;
-    green /= 255;
-    blue /= 255;
     // Calibrate color according to reference
     red += refR;
     green += refG;
     blue += refB;
+    
+    red /= 255;
+    green /= 255;
+    blue /= 255;
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -404,14 +400,10 @@
             blue += pixelBytes[index+2];
             count++;
         }
-    red /= count*255;
-    green /= count*255;
-    blue /= count*255;
-    
     // Calibrate color according to reference
-    red += refR;
-    green += refG;
-    blue += refB;
+    red = (red/count + refR)/255;
+    green = (green/count + refG)/255;
+    blue = (blue/count + refB)/255;
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -432,9 +424,80 @@
     [hsl setSaturation:sat];
     
     printf("averaging over [%d,%d] [%d,%d]\n",row_min,row_max,col_min,col_max);
+    printf("refR = %.2f refG = %.2f refB = %.2f\n",refR,refG,refB);
     printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
     
     return hsl;
+}
+
+-(void) setReference:(unsigned char*)pixelBytes row:(int) row col:(int) col
+{
+    HSL *hsl = [[HSL alloc] init];
+    int row_min = (row - RADIUS >= 0)? row-RADIUS:0;
+    int row_max = (row + RADIUS < height)? row+RADIUS: height-1;
+    int col_min = (col - RADIUS >= 0)? col-RADIUS:0;
+    int col_max = (col + RADIUS < width)? col+RADIUS: width-1;
+    int bytesPerPixel = 4;
+    double red = 0, green = 0, blue = 0;
+    int count = 0;
+    
+    for(int i = row_min; i <= row_max; i++)
+        for(int j = col_min; j <= col_max; j++) {
+            int index = i*bytesPerRow + j*bytesPerPixel;
+            red += pixelBytes[index];
+            green += pixelBytes[index+1];
+            blue += pixelBytes[index+2];
+            count++;
+        }
+    red /= count;
+    green /= count;
+    blue /= count;
+    if(customType == 1) {
+        printf("custom1\n");
+        red = (255 - red)/2;
+        green = (255 - green)/2;
+        blue = (255 - blue)/2;
+    }
+    else if(customType == 2) {
+        int i = height/2;
+        int j = width/2;
+        red = pixelBytes[i*bytesPerRow + j*bytesPerPixel];
+        green = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 1];
+        blue = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 2];
+        
+        printf("custom2\n");
+        red = (255 - red)/2;
+        green = (255 - green)/2;
+        blue = (255 - blue)/2;
+    }
+    else if(customType == 3) {
+        printf("custom3\n");
+        double M = MAX(MAX(red,green),blue);
+        red = M - red;
+        green = M - green;
+        blue = M - blue;
+    }
+    else {
+        int i = height/2;
+        int j = width/2;
+        red = pixelBytes[i*bytesPerRow + j*bytesPerPixel];
+        green = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 1];
+        blue = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 2];
+        printf("custom4\n");
+        double M = MAX(MAX(red,green),blue);
+        red = M - red;
+        green = M - green;
+        blue = M - blue;
+    }
+    [self setRed:red setGreen:green setBlue:blue];
+    settings = NO;
+}
+
+- (void)setRed:(double)red setGreen:(double)green setBlue:(double)blue {
+    [self setRefR:red];
+    [self setRefG:green];
+    [self setRefB:blue];
+    printf("refR = %.2f refG = %.2f refB = %.2f\n",refR,refG,refB);
 }
 
 - (void)dealloc {
@@ -443,8 +506,8 @@
 
 	[previewLayer release], previewLayer = nil;
 	[captureSession release], captureSession = nil;
-  [stillImageOutput release], stillImageOutput = nil;
-  [stillImage release], stillImage = nil;
+    [stillImageOutput release], stillImageOutput = nil;
+    [stillImage release], stillImage = nil;
 
 	[super dealloc];
 }
