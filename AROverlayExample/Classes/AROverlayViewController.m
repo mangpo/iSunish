@@ -106,7 +106,7 @@
     UILabel *customLable4 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, w, h)];
     [customLable4 setBackgroundColor:[UIColor clearColor]];
     [customLable4 setCenter:CGPointMake(w/2, h/2)];
-    [customLable4 setText:@"Custom Lighting3"];
+    [customLable4 setText:@"Custom Lighting4"];
     customLable4.textAlignment = UITextAlignmentCenter;
     [custom4 addSubview:customLable4];
     
@@ -120,9 +120,9 @@
     [settingsFrame addSubview:fluorescence];
     [settingsFrame addSubview:incandescence];
     [settingsFrame addSubview:custom];
-    [settingsFrame addSubview:custom2];
-    [settingsFrame addSubview:custom3];
-    [settingsFrame addSubview:custom4];
+    //[settingsFrame addSubview:custom2];
+    //[settingsFrame addSubview:custom3];
+    //[settingsFrame addSubview:custom4];
     [settingsFrame setHidden:YES];
     [[self view] addSubview:settingsFrame];
     
@@ -140,12 +140,14 @@
 }
 
 - (void)fluorescencePressed {
-    [[self captureManager] setRed:0 setGreen:0 setBlue:0];
+    //[[self captureManager] setRed:0 setGreen:0 setBlue:0];
+    [[self captureManager] setRed:1 setGreen:1 setBlue:1];
     [self backToMainPanel];
 }
 
 - (void)incandescencePressed {
-    [[self captureManager] setRed:7 setGreen:0 setBlue:51];
+    //[[self captureManager] setRed:7 setGreen:0 setBlue:51];
+    [[self captureManager] setRed:0.97 setGreen:1 setBlue:0.8];
     [self backToMainPanel];
 }
 

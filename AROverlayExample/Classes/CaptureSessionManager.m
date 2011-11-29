@@ -19,9 +19,9 @@
         //speech synthesis
         fliteEngine=[[FliteTTS alloc] init];
         [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
-        refR = 0;
-        refG = 0;
-        refB = 0;
+        refR = 1;
+        refG = 1;
+        refB = 1;
         settings = NO;
         /*[self fromR:81 fromG:92 fromB:129];
         [self fromR:168 fromG:166 fromB:173];
@@ -337,9 +337,12 @@
     blue /= count*255;
     
     // Calibrate color according to reference
-    red += refR;
+    /*red += refR;
     green += refG;
-    blue += refB;
+    blue += refB;*/
+    red /= refR;
+    green /= refG;
+    blue /= refB;
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -351,13 +354,18 @@
 -(void) fromR:(double) red fromG:(double) green fromB:(double) blue
 {
     // Calibrate color according to reference
-    red += refR;
+    /*red += refR;
     green += refG;
-    blue += refB;
+    blue += refB;*/
     
     red /= 255;
     green /= 255;
     blue /= 255;
+    
+    // Calibrate color according to reference
+    red /= refR;
+    green /= refG;
+    blue /= refB;
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -401,9 +409,13 @@
             count++;
         }
     // Calibrate color according to reference
-    red = (red/count + refR)/255;
+    /*red = (red/count + refR)/255;
     green = (green/count + refG)/255;
-    blue = (blue/count + refB)/255;
+    blue = (blue/count + refB)/255;*/
+    
+    red = red/(count*255*refR);
+    green = green/(count*255*refG);
+    blue = blue/(count*255*refB);
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -439,7 +451,7 @@
     int col_max = (col + RADIUS < width)? col+RADIUS: width-1;
     int bytesPerPixel = 4;
     double red = 0, green = 0, blue = 0;
-    int count = 0;
+    /*int count = 0;
     
     for(int i = row_min; i <= row_max; i++)
         for(int j = col_min; j <= col_max; j++) {
@@ -488,8 +500,20 @@
         red = M - red;
         green = M - green;
         blue = M - blue;
-    }
-    [self setRed:red setGreen:green setBlue:blue];
+    }*/
+    
+    for(int i = row_min; i <= row_max; i++)
+        for(int j = col_min; j <= col_max; j++) {
+            int index = i*bytesPerRow + j*bytesPerPixel;
+            if(pixelBytes[index] > red)
+                red = pixelBytes[index];
+            if(pixelBytes[index+1] > green)
+                green = pixelBytes[index+2];
+            if(pixelBytes[index+2] > blue)
+                blue = pixelBytes[index+2];
+        }
+
+    [self setRed:red/255 setGreen:green/255 setBlue:blue/255];
     settings = NO;
 }
 
