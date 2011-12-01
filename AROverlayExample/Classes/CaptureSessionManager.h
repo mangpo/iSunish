@@ -1,5 +1,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "HSL.h"
+#import "RGB.h"
 
 #define kImageCapturedSuccessfully @"imageCapturedSuccessfully"
 #define RADIUS 30
@@ -10,7 +11,10 @@ FliteTTS *fliteEngine;
 
 @interface CaptureSessionManager : NSObject {
     int height,width,bytesPerRow;
-    double refR, refG, refB;
+    //double refR, refG, refB;
+    double whiteR, whiteG, whiteB;
+    double blackR, blackG, blackB;
+    double meanR, meanG, meanB, k;
     Boolean settings;
     int customType;
 }
@@ -20,13 +24,19 @@ FliteTTS *fliteEngine;
 @property (retain) AVCaptureStillImageOutput *stillImageOutput;
 @property (nonatomic, retain) UIImage *stillImage;
 @property (nonatomic, readwrite) int height, width, bytesPerRow;
-@property (nonatomic, readwrite) double refR, refG, refB;
+//@property (nonatomic, readwrite) double refR, refG, refB;
+@property (nonatomic, readwrite) double whiteR, whiteG, whiteB;
+@property (nonatomic, readwrite) double blackR, blackG, blackB;
+@property (nonatomic, readwrite) double meanR, meanG, meanB, k;
 @property (nonatomic, readwrite) Boolean settings;
 @property (nonatomic, readwrite) int customType;
 
 //-(void) getColor:(UIImage*) image;
+-(RGB*) getAverageRGB:(unsigned char*)pixelBytes row:(int) row col:(int) col;
+-(HSL*) convertToHSL:(RGB*) rgb;
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue;
 -(double) getAverageHue:(unsigned char*)pixelBytes row:(int) row col:(int) col;
+
 -(void) fromR:(double) red fromG:(double) green fromB:(double) blue;
 -(NSString*) getColorFromHue:(double) hue;
 -(NSString*) getColorFromHSL:(HSL*) hsl;
@@ -34,7 +44,10 @@ FliteTTS *fliteEngine;
 - (void)addVideoInput;
 - (void)addStillImageOutput;
 - (void)captureStillImage;
-- (void) setRed:(double) red setGreen:(double) greeen setBlue:(double) blue;
--(void) setReference:(unsigned char*)pixelBytes row:(int) row col:(int) col;
+
+-(void) setReference:(unsigned char*)pixelBytes;
+-(RGB*) correctWithWhite:(RGB*) raw;
+-(RGB*) correctWithWhiteBlack:(RGB*) raw;
+-(RGB*) correctWithMean:(RGB*) raw;
 
 @end

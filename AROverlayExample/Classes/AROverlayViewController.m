@@ -141,13 +141,23 @@
 
 - (void)fluorescencePressed {
     //[[self captureManager] setRed:0 setGreen:0 setBlue:0];
-    [[self captureManager] setRed:1 setGreen:1 setBlue:1];
+    [[self captureManager] setWhiteR:1];
+    [[self captureManager] setWhiteG:1];
+    [[self captureManager] setWhiteB:1];
+    [[self captureManager] setBlackR:0];
+    [[self captureManager] setBlackR:0];
+    [[self captureManager] setBlackR:0];
     [self backToMainPanel];
 }
 
 - (void)incandescencePressed {
     //[[self captureManager] setRed:7 setGreen:0 setBlue:51];
-    [[self captureManager] setRed:0.97 setGreen:1 setBlue:0.8];
+    [[self captureManager] setWhiteR:0.97];
+    [[self captureManager] setWhiteG:1];
+    [[self captureManager] setWhiteB:0.8];
+    [[self captureManager] setBlackR:0];
+    [[self captureManager] setBlackR:0];
+    [[self captureManager] setBlackR:0];
     [self backToMainPanel];
 }
 

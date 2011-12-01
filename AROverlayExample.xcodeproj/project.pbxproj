@@ -96,6 +96,7 @@
 		96C3353C1353FC5000AD25CA /* AROverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C335381353FC5000AD25CA /* AROverlayViewController.m */; };
 		96C3353D1353FC5000AD25CA /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3353A1353FC5000AD25CA /* CaptureSessionManager.m */; };
 		96C335411353FE1500AD25CA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C335401353FE1500AD25CA /* AVFoundation.framework */; };
+		D74205941486DFAA0058FACA /* RGB.m in Sources */ = {isa = PBXBuildFile; fileRef = D74205931486DFAA0058FACA /* RGB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -249,6 +250,8 @@
 		96C335391353FC5000AD25CA /* CaptureSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureSessionManager.h; sourceTree = "<group>"; };
 		96C3353A1353FC5000AD25CA /* CaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureSessionManager.m; sourceTree = "<group>"; };
 		96C335401353FE1500AD25CA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D74205921486DFAA0058FACA /* RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGB.h; sourceTree = "<group>"; };
+		D74205931486DFAA0058FACA /* RGB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,6 +519,8 @@
 				96C335381353FC5000AD25CA /* AROverlayViewController.m */,
 				96C335391353FC5000AD25CA /* CaptureSessionManager.h */,
 				96C3353A1353FC5000AD25CA /* CaptureSessionManager.m */,
+				D74205921486DFAA0058FACA /* RGB.h */,
+				D74205931486DFAA0058FACA /* RGB.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -676,6 +681,7 @@
 				5EA153C414817C9200A940E6 /* cmu_us_kal_lpc.c in Sources */,
 				5EA153C514817C9200A940E6 /* cmu_us_kal_res.c in Sources */,
 				5EA153C614817C9200A940E6 /* cmu_us_kal_residx.c in Sources */,
+				D74205941486DFAA0058FACA /* RGB.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

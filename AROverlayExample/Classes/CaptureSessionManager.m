@@ -9,7 +9,9 @@
 @synthesize stillImageOutput;
 @synthesize stillImage;
 @synthesize width, height, bytesPerRow;
-@synthesize refR, refG, refB, settings, customType;
+//@synthesize refR, refG, refB;
+@synthesize whiteR, whiteG, whiteB, blackR, blackG, blackB, meanR, meanG, meanB, k;
+@synthesize settings, customType;
 
 #pragma mark Capture Session Configuration
 
@@ -19,16 +21,17 @@
         //speech synthesis
         fliteEngine=[[FliteTTS alloc] init];
         [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
-        refR = 1;
-        refG = 1;
-        refB = 1;
         settings = NO;
-        /*[self fromR:81 fromG:92 fromB:129];
-        [self fromR:168 fromG:166 fromB:173];
-        [self fromR:38 fromG:37 fromB:53];*/
-        /*[self fromR:102 fromG:109 fromB:125];
-        [self fromR:141 fromG:145 fromB:150];
-        [self fromR:177 fromG:184 fromB:185];*/
+        [self setWhiteR:1];
+        [self setWhiteG:1];
+        [self setWhiteB:1];
+        [self setBlackR:0];
+        [self setBlackR:0];
+        [self setBlackR:0];
+        meanR = 1;
+        meanG = 1;
+        meanB = 1;
+        k = 1;
 	}
 	return self;
 }
@@ -116,13 +119,35 @@
                                                            int index = height/2*bytesPerRow + width/2*bytesPerPixel;                                                           printf("RGB at pixel: %d %d %d",pixelBytes[index],pixelBytes[index+1],pixelBytes[index+2]);
                                                            
                                                            if(settings) {
-                                                               [self setReference:pixelBytes row:height/2 col:width/2];
+                                                               [self setReference:pixelBytes];
                                                            }
                                                            else {
-                                                           HSL *hsl = [self getAverageHSL:pixelBytes row:height/2 col:width/2];
-                                                           printf("average color around pixel(%d,%d)\n",height/2,width/2);
-                                                           NSLog([self getColorFromHSL:hsl]);
-                                                           [fliteEngine speakText:[self getColorFromHSL:hsl]];
+                                                               RGB *rgb = [self getAverageRGB:pixelBytes row:height/2 col:width/2];
+                                                               HSL *hsl = [self convertToHSL:rgb];
+                                                               NSLog(@"non-corrected");
+                                                               NSLog([self getColorFromHSL:hsl]);
+                                                               [fliteEngine speakText:[self getColorFromHSL:hsl]];
+                                                               [NSThread sleepForTimeInterval:1.5];
+                                                               
+                                                               RGB *rgb_white = [self correctWithWhite:rgb];
+                                                               HSL *hsl_white = [self convertToHSL:rgb_white];
+                                                               NSLog(@"corrected with white");
+                                                               NSLog([self getColorFromHSL:hsl_white]);
+                                                               [fliteEngine speakText:[self getColorFromHSL:hsl_white]];
+                                                               [NSThread sleepForTimeInterval:1.5];
+                                                               
+                                                               RGB *rgb_wb = [self correctWithWhiteBlack:rgb];
+                                                               HSL *hsl_wb = [self convertToHSL:rgb_wb];
+                                                               NSLog(@"corrected with white & black");
+                                                               NSLog([self getColorFromHSL:hsl_wb]);
+                                                               [fliteEngine speakText:[self getColorFromHSL:hsl_wb]];
+                                                               [NSThread sleepForTimeInterval:1.5];
+                                                               
+                                                               RGB *rgb_mean = [self correctWithMean:rgb];
+                                                               HSL *hsl_mean = [self convertToHSL:rgb_mean];
+                                                               NSLog(@"corrected with white & black");
+                                                               NSLog([self getColorFromHSL:hsl_mean]);
+                                                               [fliteEngine speakText:[self getColorFromHSL:hsl_mean]];
                                                            }
                                                            
                                                          [self setStillImage:image];
@@ -130,7 +155,6 @@
                                                          [[NSNotificationCenter defaultCenter] postNotificationName:kImageCapturedSuccessfully object:nil];
                                                        }];
 }
-
 
 -(NSString*) getColorFromHSL:(HSL *)hsl
 {
@@ -336,14 +360,6 @@
     green /= count*255;
     blue /= count*255;
     
-    // Calibrate color according to reference
-    /*red += refR;
-    green += refG;
-    blue += refB;*/
-    red /= refR;
-    green /= refG;
-    blue /= refB;
-    
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
         hue += 360;
@@ -353,19 +369,9 @@
 
 -(void) fromR:(double) red fromG:(double) green fromB:(double) blue
 {
-    // Calibrate color according to reference
-    /*red += refR;
-    green += refG;
-    blue += refB;*/
-    
     red /= 255;
     green /= 255;
     blue /= 255;
-    
-    // Calibrate color according to reference
-    red /= refR;
-    green /= refG;
-    blue /= refB;
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -408,14 +414,10 @@
             blue += pixelBytes[index+2];
             count++;
         }
-    // Calibrate color according to reference
-    /*red = (red/count + refR)/255;
-    green = (green/count + refG)/255;
-    blue = (blue/count + refB)/255;*/
     
-    red = red/(count*255*refR);
-    green = green/(count*255*refG);
-    blue = blue/(count*255*refB);
+    red = red/(count*255);
+    green = green/(count*255);
+    blue = blue/(count*255);
     
     double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
     if(hue < 0)
@@ -436,22 +438,21 @@
     [hsl setSaturation:sat];
     
     printf("averaging over [%d,%d] [%d,%d]\n",row_min,row_max,col_min,col_max);
-    printf("refR = %.2f refG = %.2f refB = %.2f\n",refR,refG,refB);
     printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
     
     return hsl;
 }
 
--(void) setReference:(unsigned char*)pixelBytes row:(int) row col:(int) col
+-(RGB*) getAverageRGB:(unsigned char*)pixelBytes row:(int) row col:(int) col
 {
-    HSL *hsl = [[HSL alloc] init];
+    RGB *rgb = [[RGB alloc] init];
     int row_min = (row - RADIUS >= 0)? row-RADIUS:0;
     int row_max = (row + RADIUS < height)? row+RADIUS: height-1;
     int col_min = (col - RADIUS >= 0)? col-RADIUS:0;
     int col_max = (col + RADIUS < width)? col+RADIUS: width-1;
     int bytesPerPixel = 4;
     double red = 0, green = 0, blue = 0;
-    /*int count = 0;
+    int count = 0;
     
     for(int i = row_min; i <= row_max; i++)
         for(int j = col_min; j <= col_max; j++) {
@@ -461,67 +462,127 @@
             blue += pixelBytes[index+2];
             count++;
         }
-    red /= count;
-    green /= count;
-    blue /= count;
-    if(customType == 1) {
-        printf("custom1\n");
-        red = (255 - red)/2;
-        green = (255 - green)/2;
-        blue = (255 - blue)/2;
-    }
-    else if(customType == 2) {
-        int i = height/2;
-        int j = width/2;
-        red = pixelBytes[i*bytesPerRow + j*bytesPerPixel];
-        green = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 1];
-        blue = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 2];
-        
-        printf("custom2\n");
-        red = (255 - red)/2;
-        green = (255 - green)/2;
-        blue = (255 - blue)/2;
-    }
-    else if(customType == 3) {
-        printf("custom3\n");
-        double M = MAX(MAX(red,green),blue);
-        red = M - red;
-        green = M - green;
-        blue = M - blue;
-    }
-    else {
-        int i = height/2;
-        int j = width/2;
-        red = pixelBytes[i*bytesPerRow + j*bytesPerPixel];
-        green = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 1];
-        blue = pixelBytes[i*bytesPerRow + j*bytesPerPixel + 2];
-        printf("custom4\n");
-        double M = MAX(MAX(red,green),blue);
-        red = M - red;
-        green = M - green;
-        blue = M - blue;
-    }*/
     
-    for(int i = row_min; i <= row_max; i++)
-        for(int j = col_min; j <= col_max; j++) {
+    red = red/(count*255);
+    green = green/(count*255);
+    blue = blue/(count*255);
+    
+    [rgb setRed:red];
+    [rgb setGreen:green];
+    [rgb setBlue:blue];
+    return rgb;
+}
+
+-(HSL*) convertToHSL:(RGB*) rgb {
+    printf("R = %.2f G = %.2f B = %.2f\n",rgb.red,rgb.green,rgb.blue);
+    HSL *hsl = [[HSL alloc] init];
+    double red = rgb.red;
+    double green = rgb.green;
+    double blue = rgb.blue;
+    double hue = atan2(sqrt(3) * (green - blue),2*red - green - blue)/3.14159265*180;
+    if(hue < 0)
+        hue += 360;
+    
+    double M = MAX(MAX(red,green),blue);
+    double m = MIN(MIN(red,green),blue);
+    double light = (M + m)/2;
+    
+    double C = M - m;
+    double sat = (C == 0)? 0: C/(1 - ABS(2*light - 1)); 
+    
+    light *= 100;
+    sat *= 100;
+    
+    [hsl setHue:hue];
+    [hsl setLight:light];
+    [hsl setSaturation:sat];
+    
+    printf("H = %.2f S = %.2f L = %.2f\n",hue,sat,light);
+    
+    return hsl;
+}
+
+-(void) setReference:(unsigned char*)pixelBytes
+{
+    int bytesPerPixel = 4;
+    double red_max = 0, green_max = 0, blue_max = 0;
+    double red_min = 255, green_min = 255, blue_min = 255;
+    double red_mean = 0, green_mean = 0, blue_mean = 0;
+    
+    for(int i = 0; i < height; i++)
+        for(int j = 0; j < width; j++) {
             int index = i*bytesPerRow + j*bytesPerPixel;
-            if(pixelBytes[index] > red)
-                red = pixelBytes[index];
-            if(pixelBytes[index+1] > green)
-                green = pixelBytes[index+2];
-            if(pixelBytes[index+2] > blue)
-                blue = pixelBytes[index+2];
+            if(pixelBytes[index] > red_max) {
+                red_max = pixelBytes[index];
+            }
+            if(pixelBytes[index+1] > green_max) {
+                green_max = pixelBytes[index+1];
+            }
+            if(pixelBytes[index+2] > blue_max) {
+                blue_max = pixelBytes[index+2];
+            }
+            if(pixelBytes[index] < red_min) {
+                red_min = pixelBytes[index];
+            }
+            if(pixelBytes[index+1] < green_min) {
+                green_min = pixelBytes[index+1];
+            }
+            if(pixelBytes[index+2] < blue_min) {
+                blue_min = pixelBytes[index+2];
+            }
+            red_mean += pixelBytes[index];
+            green_mean += pixelBytes[index+1];
+            blue_mean += pixelBytes[index+1];
         }
 
-    [self setRed:red/255 setGreen:green/255 setBlue:blue/255];
+    whiteR = red_max/255;
+    whiteG = green_max/255;
+    whiteB = blue_max/255;
+    blackR = red_min/255;
+    blackG = green_min/255;
+    blackB = blue_min/255;
+    meanR = red_mean/(height*width*255);
+    meanG = green_mean/(height*width*255);
+    meanB = blue_mean/(height*width*255);
+    k = MIN(MIN(meanR/whiteR, meanG/whiteG), meanB/whiteB);
     settings = NO;
 }
 
-- (void)setRed:(double)red setGreen:(double)green setBlue:(double)blue {
-    [self setRefR:red];
-    [self setRefG:green];
-    [self setRefB:blue];
-    printf("refR = %.2f refG = %.2f refB = %.2f\n",refR,refG,refB);
+-(RGB*) correctWithWhite:(RGB*) raw {
+    RGB *correct = [[RGB alloc] init];
+    correct.red = raw.red/whiteR;
+    correct.green = raw.green/whiteG;
+    correct.blue = raw.blue/whiteB;
+    printf("raw R = %.2f G = %.2f B = %.2f\n",raw.red,raw.green,raw.blue);
+    printf("white R = %.2f G = %.2f B = %.2f\n",whiteR,whiteG,whiteB);
+    printf("correct R = %.2f G = %.2f B = %.2f\n",correct.red,correct.green,correct.blue);
+    return correct;
+}
+
+-(RGB*) correctWithWhiteBlack:(RGB*) raw {
+    RGB *correct = [[RGB alloc] init];
+    correct.red = (raw.red - blackR)/(whiteR - blackR);
+    correct.green = (raw.green - blackG)/(whiteG - blackG);
+    correct.blue = (raw.blue - blackB)/(whiteB - blackB);
+    if(correct.red < 0)
+        correct.red = 0;
+    if(correct.green < 0)
+        correct.green = 0;
+    if(correct.blue < 0)
+        correct.blue = 0;
+    printf("raw R = %.2f G = %.2f B = %.2f\n",raw.red,raw.green,raw.blue);
+    printf("white R = %.2f G = %.2f B = %.2f\n",whiteR,whiteG,whiteB);
+    printf("black R = %.2f G = %.2f B = %.2f\n",blackR,blackG,blackB);
+    printf("correct R = %.2f G = %.2f B = %.2f\n",correct.red,correct.green,correct.blue);
+    return correct;
+}
+
+-(RGB*) correctWithMean:(RGB*) raw {
+    RGB *correct = [[RGB alloc] init];
+    correct.red = k*raw.red/meanR;
+    correct.green = k*raw.green/meanG;
+    correct.blue = k*raw.blue/meanB;
+    return correct;
 }
 
 - (void)dealloc {
