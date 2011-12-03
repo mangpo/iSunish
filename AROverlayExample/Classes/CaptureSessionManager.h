@@ -1,6 +1,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "HSL.h"
 #import "RGB.h"
+#import "FliteTTS.h"
 
 #define kImageCapturedSuccessfully @"imageCapturedSuccessfully"
 #define RADIUS 30
@@ -34,11 +35,13 @@ FliteTTS *fliteEngine;
 //-(void) getColor:(UIImage*) image;
 -(RGB*) getAverageRGB:(unsigned char*)pixelBytes row:(int) row col:(int) col;
 -(HSL*) convertToHSL:(RGB*) rgb;
+-(double) upclamp:(double)num;
 -(double) getHueFromRed:(unsigned char) red green:(unsigned char) green blue:(unsigned char) blue;
 -(double) getAverageHue:(unsigned char*)pixelBytes row:(int) row col:(int) col;
 
 -(void) fromR:(double) red fromG:(double) green fromB:(double) blue;
 -(NSString*) getColorFromHue:(double) hue;
+-(NSString*) getColorFromRGB:(RGB*) rgb;
 -(NSString*) getColorFromHSL:(HSL*) hsl;
 - (void)addVideoPreviewLayer;
 - (void)addVideoInput;

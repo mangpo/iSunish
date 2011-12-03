@@ -14,7 +14,9 @@
 	[[self captureManager] addVideoInput];
   
   [[self captureManager] addStillImageOutput];
-  
+    fliteEngine=[[FliteTTS alloc] init];
+    [fliteEngine setPitch:120.0 variance:50.0 speed:1.2];	// Change the voice 
+
 	[[self captureManager] addVideoPreviewLayer];
 	CGRect layerRect = [[[self view] layer] bounds];
 	[[[self captureManager] previewLayer] setBounds:layerRect];
@@ -22,10 +24,10 @@
                                                                 CGRectGetMidY(layerRect))];
 	[[[self view] layer] addSublayer:[[self captureManager] previewLayer]];
   
-  //UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"overlaygraphic.png"]];
-  //[overlayImageView setFrame:CGRectMake(30, 100, 260, 200)];
- // [[self view] addSubview:overlayImageView];
- // [overlayImageView release];
+  UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"overlaygraphic.png"]];
+  [overlayImageView setFrame:CGRectMake(80, 170, 160, 130)];
+  [[self view] addSubview:overlayImageView];
+  [overlayImageView release];
   CGRect bounds=[[UIScreen mainScreen] bounds];
   overlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
   [overlayButton setImage:[UIImage imageNamed:@"takePicture.png"] forState:UIControlStateNormal];
@@ -35,11 +37,12 @@
   [[self view] addSubview:overlayButton];
     
     settingsButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [settingsButton setFrame:CGRectMake(bounds.origin.x+110,bounds.origin.y+420,bounds.size.width-220, 40)];
-    UILabel *settingsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
+    [settingsButton setAccessibilityLabel:NSLocalizedString(@"White Balance", @"")];
+    [settingsButton setFrame:CGRectMake(bounds.origin.x,bounds.origin.y+430,bounds.size.width, 50)];
+    UILabel *settingsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 30)];
     [settingsLabel setBackgroundColor:[UIColor clearColor]];
-    [settingsLabel setCenter:CGPointMake((bounds.size.width-220)/2, 20)];
-    [settingsLabel setText:@"settings"];
+    [settingsLabel setCenter:CGPointMake((bounds.size.width-20)/2, 25)];
+    [settingsLabel setText:@"White Balance"];
     settingsLabel.textAlignment = UITextAlignmentCenter;
     [settingsButton addSubview:settingsLabel];
     [settingsButton addTarget:self action:@selector(settingsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -48,25 +51,33 @@
     settingsFrame = [[UIView alloc] initWithFrame:CGRectMake(bounds.origin.x,bounds.origin.y,bounds.size.width, bounds.size.height)];
     [settingsFrame setBackgroundColor:[UIColor grayColor]];
     
-    int w = 200, h = 30;
+    int w = 320, h = 60;
     UIButton *fluorescence = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [fluorescence setAccessibilityLabel:NSLocalizedString(@"Fluorescent Lighting", @"")];
     UIButton *incandescence = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [incandescence setAccessibilityLabel:NSLocalizedString(@"Incandescent Lighting", @"")];
     UIButton *custom = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [custom setAccessibilityLabel:NSLocalizedString(@"Custom Lighting", @"")];
     UIButton *custom2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIButton *custom3 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIButton *custom4 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *back=[UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [back setAccessibilityLabel:NSLocalizedString(@"Back", @"")];
+    
     [fluorescence setFrame:CGRectMake(0,0,w, h)];
     [incandescence setFrame:CGRectMake(0,0,w, h)];
     [custom setFrame:CGRectMake(0,0,w, h)];
     [custom2 setFrame:CGRectMake(0,0,w, h)];
     [custom3 setFrame:CGRectMake(0,0,w, h)];
     [custom4 setFrame:CGRectMake(0,0,w, h)];
-    [fluorescence setCenter:CGPointMake(bounds.size.width/2, 50)];
-    [incandescence setCenter:CGPointMake(bounds.size.width/2, 100)];
-    [custom setCenter:CGPointMake(bounds.size.width/2, 150)];
+        [back setFrame:CGRectMake(0,0,w, h)];
+    [fluorescence setCenter:CGPointMake(bounds.size.width/2, 80)];
+    [incandescence setCenter:CGPointMake(bounds.size.width/2, 180)];
+    [custom setCenter:CGPointMake(bounds.size.width/2, 280)];
     [custom2 setCenter:CGPointMake(bounds.size.width/2, 200)];
     [custom3 setCenter:CGPointMake(bounds.size.width/2, 250)];
     [custom4 setCenter:CGPointMake(bounds.size.width/2, 300)];
+        [back setCenter:CGPointMake(bounds.size.width/2, 450)];
     
     UILabel *fluorescenceLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, w, h)];
     [fluorescenceLable setBackgroundColor:[UIColor clearColor]];
@@ -110,12 +121,20 @@
     customLable4.textAlignment = UITextAlignmentCenter;
     [custom4 addSubview:customLable4];
     
+    UILabel *backLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, w, h)];
+    [backLable setBackgroundColor:[UIColor clearColor]];
+    [backLable setCenter:CGPointMake(w/2, h/2)];
+    [backLable setText:@"Back"];
+    backLable.textAlignment = UITextAlignmentCenter;
+    [back addSubview:backLable];
+    
     [fluorescence addTarget:self action:@selector(fluorescencePressed) forControlEvents:UIControlEventTouchUpInside];
     [incandescence addTarget:self action:@selector(incandescencePressed) forControlEvents:UIControlEventTouchUpInside];
     [custom addTarget:self action:@selector(customPressed) forControlEvents:UIControlEventTouchUpInside];
     [custom2 addTarget:self action:@selector(customPressed2) forControlEvents:UIControlEventTouchUpInside];
     [custom3 addTarget:self action:@selector(customPressed3) forControlEvents:UIControlEventTouchUpInside];
     [custom4 addTarget:self action:@selector(customPressed4) forControlEvents:UIControlEventTouchUpInside];
+    [back addTarget:self action:@selector(backPressed) forControlEvents:UIControlEventTouchUpInside];
     
     [settingsFrame addSubview:fluorescence];
     [settingsFrame addSubview:incandescence];
@@ -123,6 +142,7 @@
     //[settingsFrame addSubview:custom2];
     //[settingsFrame addSubview:custom3];
     //[settingsFrame addSubview:custom4];
+    [settingsFrame addSubview:back];
     [settingsFrame setHidden:YES];
     [[self view] addSubview:settingsFrame];
     
@@ -164,6 +184,8 @@
 - (void)customPressed {
     [[self captureManager] setSettings:YES];
     [[self captureManager] setCustomType:1];
+    [fliteEngine setPitch:120.0 variance:50.0 speed:1.2];	// Change the voice 
+    [fliteEngine speakText:@"Calibration. Take a picture of a white object."];
     [self backToMainPanel];
 }
 
@@ -182,6 +204,10 @@
 - (void)customPressed4 {
     [[self captureManager] setSettings:YES];
     [[self captureManager] setCustomType:4];
+    [self backToMainPanel];
+}
+
+- (void)backPressed {
     [self backToMainPanel];
 }
 

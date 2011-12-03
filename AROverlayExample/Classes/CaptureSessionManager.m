@@ -19,8 +19,6 @@
 	if ((self = [super init])) {
 		[self setCaptureSession:[[AVCaptureSession alloc] init]];
         //speech synthesis
-        fliteEngine=[[FliteTTS alloc] init];
-        [fliteEngine setPitch:180.0 variance:50.0 speed:1.2];	// Change the voice 
         settings = NO;
         [self setWhiteR:1];
         [self setWhiteG:1];
@@ -120,40 +118,114 @@
                                                            
                                                            if(settings) {
                                                                [self setReference:pixelBytes];
+                                                               [fliteEngine speakText:@"Calibration complete."];
                                                            }
                                                            else {
                                                                RGB *rgb = [self getAverageRGB:pixelBytes row:height/2 col:width/2];
                                                                HSL *hsl = [self convertToHSL:rgb];
                                                                NSLog(@"non-corrected");
-                                                               NSLog([self getColorFromHSL:hsl]);
-                                                               [fliteEngine speakText:[self getColorFromHSL:hsl]];
-                                                               [NSThread sleepForTimeInterval:1.5];
+                                                               NSLog([self getColorFromRGB:rgb]);
+                                                               //[fliteEngine speakText:[self getColorFromRGB:rgb]];
+                                                               //[NSThread sleepForTimeInterval:1.5];
                                                                
                                                                RGB *rgb_white = [self correctWithWhite:rgb];
                                                                HSL *hsl_white = [self convertToHSL:rgb_white];
                                                                NSLog(@"corrected with white");
                                                                NSLog([self getColorFromHSL:hsl_white]);
-                                                               [fliteEngine speakText:[self getColorFromHSL:hsl_white]];
-                                                               [NSThread sleepForTimeInterval:1.5];
+                                                               [fliteEngine speakText:[self getColorFromRGB:rgb_white]];
+                                                               //[NSThread sleepForTimeInterval:1.5];
                                                                
                                                                RGB *rgb_wb = [self correctWithWhiteBlack:rgb];
                                                                HSL *hsl_wb = [self convertToHSL:rgb_wb];
                                                                NSLog(@"corrected with white & black");
                                                                NSLog([self getColorFromHSL:hsl_wb]);
-                                                               [fliteEngine speakText:[self getColorFromHSL:hsl_wb]];
-                                                               [NSThread sleepForTimeInterval:1.5];
+                                                               //[fliteEngine speakText:[self getColorFromRGB:rgb_wb]];
+                                                               //[NSThread sleepForTimeInterval:1.5];
                                                                
                                                                RGB *rgb_mean = [self correctWithMean:rgb];
                                                                HSL *hsl_mean = [self convertToHSL:rgb_mean];
                                                                NSLog(@"corrected with white & black");
                                                                NSLog([self getColorFromHSL:hsl_mean]);
-                                                               [fliteEngine speakText:[self getColorFromHSL:hsl_mean]];
+                                                              // [fliteEngine speakText:[self getColorFromRGB:rgb_mean]];
                                                            }
                                                            
                                                          [self setStillImage:image];
                                                          [image release];
                                                          [[NSNotificationCenter defaultCenter] postNotificationName:kImageCapturedSuccessfully object:nil];
                                                        }];
+}
+
+-(double) upclamp:(double)num
+{
+    num*=2;
+    if(num>255)
+        num=255;
+    return num;
+}
+
+- (void)updateRGB:(double*)num str:(NSString**) str color:(NSString*) color cr:(double) cr cg:(double) cg cb:(double) cb r:(double) r g:(double) g b:(double) b leeway:(double) leeway
+{
+    double mag=fabs(cr-r)+fabs(cg-g)+fabs(cb-b);
+    //double lightmag=fabs([self upclamp:cr]-r)+fabs([self upclamp:cg]-g)+fabs([self upclamp:cb]-b);
+    //double darkmag=fabs(.5*cr-r)+fabs(.5*cg-g)+fabs(.5*cb-b);
+    mag*=(1-leeway);
+    //double avgprops=(fabs(r/g-cr/cg)+fabs(r/b-cr/cb)+fabs(b/g-cb/cg))/3.0;
+    //printf("Average Proportions: %f",avgprops);
+    //NSLog(color);
+    //lightmag*=(1-leeway);
+    //darkmag*=(1-leeway);
+    if(mag< *num)
+    {
+        *num=mag;
+        *str=color;
+    }
+/*    if(lightmag< *num && ![color isEqualToString:@"black"] && ![color isEqualToString:@"white"])
+    {
+        *num=mag;
+        *str=[NSString stringWithFormat:@"%@ %@",@"light",color];
+    }
+    if(darkmag< *num && ![color isEqualToString:@"black"] && ![color isEqualToString:@"white"])
+    {
+        *num=mag;
+        *str=[NSString stringWithFormat:@"%@ %@",@"dark",color];
+    }*/
+}
+
+-(NSString*) getColorFromRGB:(RGB *)rgb
+{
+    double red= [rgb red];
+    double green = [rgb green];
+    double blue = [rgb blue];
+    NSString * s=@"unknown"; 
+    double num=1000000;
+    printf("RGB: %f %f %f\n",red*255,green*255,blue*255);
+    [self updateRGB:&num str:&s color:@"black" cr:red cg:green cb:blue r:0 g:0 b:0 leeway:0];
+    [self updateRGB:&num str:&s color:@"blue" cr:red cg:green cb:blue r:.2 g:.2 b:.8 leeway:0];
+    [self updateRGB:&num str:&s color:@"light blue" cr:red cg:green cb:blue r:.4 g:.6 b:.9 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark blue" cr:red cg:green cb:blue r:.1 g:.1 b:.5 leeway:0];
+    [self updateRGB:&num str:&s color:@"red" cr:red cg:green cb:blue r:.8 g:.2 b:.2 leeway:0];
+    [self updateRGB:&num str:&s color:@"pink" cr:red cg:green cb:blue r:.9 g:.4 b:.9 leeway:0];   
+    [self updateRGB:&num str:&s color:@"maroon" cr:red cg:green cb:blue r:.5 g:.05 b:.05 leeway:0];
+    [self updateRGB:&num str:&s color:@"green" cr:red cg:green cb:blue r:.2 g:.8 b:.2 leeway:0];
+    [self updateRGB:&num str:&s color:@"light green" cr:red cg:green cb:blue r:.4 g:.8 b:.4 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark green" cr:red cg:green cb:blue r:.05 g:.5 b:.05 leeway:0];
+    //[self updateRGB:&num str:&s color:@"cyan" cr:red cg:green cb:blue r:0 g:.9 b:.9 leeway:0];
+    //[self updateRGB:&num str:&s color:@"fuchsia" cr:red cg:green cb:blue r:.7 g:0 b:.7 leeway:0];
+    //[self updateRGB:&num str:&s color:@"gold" cr:red cg:green cb:blue r:1 g:.84 b:0 leeway:0];
+    [self updateRGB:&num str:&s color:@"grey" cr:red cg:green cb:blue r:.5 g:.5 b:.5 leeway:0];
+    //[self updateRGB:&num str:&s color:@"lime" cr:red cg:green cb:blue r:0 g:1 b:0 leeway:0];
+    //[self updateRGB:&num str:&s color:@"maroon" cr:red cg:green cb:blue r:.5 g:0 b:0 leeway:0];
+    [self updateRGB:&num str:&s color:@"purple" cr:red cg:green cb:blue r:.5 g:.2 b:.5 leeway:0];
+    //[self updateRGB:&num str:&s color:@"silver" cr:red cg:green cb:blue r:.75 g:.75 b:.75 leeway:0];
+    //[self updateRGB:&num str:&s color:@"teal" cr:red cg:green cb:blue r:0 g:.5 b:.5 leeway:0];
+    //[self updateRGB:&num str:&s color:@"turqoise" cr:red cg:green cb:blue r:.19 g:.84 b:.78 leeway:0];
+    [self updateRGB:&num str:&s color:@"white" cr:red cg:green cb:blue r:.85 g:.85 b:.85 leeway:0];
+    [self updateRGB:&num str:&s color:@"yellow" cr:red cg:green cb:blue r:.8 g:.8 b:.2 leeway:0];
+    [self updateRGB:&num str:&s color:@"orange" cr:red cg:green cb:blue r:.8 g:.4 b:.1 leeway:0];
+    [self updateRGB:&num str:&s color:@"brown" cr:red cg:green cb:blue r:.3 g:.2 b:.2 leeway:0];
+    //[self updateRGB:&num str:&s color:@"pink" cr:red cg:green cb:blue r:1 g:.75 b:.80 leeway:0];
+    
+    return s;
 }
 
 -(NSString*) getColorFromHSL:(HSL *)hsl
