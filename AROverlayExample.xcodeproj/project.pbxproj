@@ -97,6 +97,8 @@
 		96C3353D1353FC5000AD25CA /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3353A1353FC5000AD25CA /* CaptureSessionManager.m */; };
 		96C335411353FE1500AD25CA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C335401353FE1500AD25CA /* AVFoundation.framework */; };
 		D74205941486DFAA0058FACA /* RGB.m in Sources */ = {isa = PBXBuildFile; fileRef = D74205931486DFAA0058FACA /* RGB.m */; };
+		D74969F9148D9517005AFA30 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D74969F7148D9517005AFA30 /* Icon-72.png */; };
+		D74969FA148D9517005AFA30 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D74969F8148D9517005AFA30 /* Icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -231,7 +233,7 @@
 		96B05C121358AD2200CF35AE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		96B05C141358AD3400CF35AE /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		96B05C161358AF7000CF35AE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		96C334F41353F36900AD25CA /* ColorMyClothes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorMyClothes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		96C334F41353F36900AD25CA /* Holi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Holi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C334F81353F36900AD25CA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		96C334FA1353F36900AD25CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		96C334FC1353F36900AD25CA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -252,6 +254,8 @@
 		96C335401353FE1500AD25CA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D74205921486DFAA0058FACA /* RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGB.h; sourceTree = "<group>"; };
 		D74205931486DFAA0058FACA /* RGB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGB.m; sourceTree = "<group>"; };
+		D74969F7148D9517005AFA30 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		D74969F8148D9517005AFA30 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -463,7 +467,7 @@
 		96C334F51353F36900AD25CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				96C334F41353F36900AD25CA /* ColorMyClothes.app */,
+				96C334F41353F36900AD25CA /* Holi.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -499,6 +503,8 @@
 		96C334FF1353F36900AD25CA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D74969F7148D9517005AFA30 /* Icon-72.png */,
+				D74969F8148D9517005AFA30 /* Icon.png */,
 				96C3353E1353FCE400AD25CA /* Images */,
 				96C3352F1353FBFD00AD25CA /* Prefix.pch */,
 				96C335001353F36900AD25CA /* Info.plist */,
@@ -560,7 +566,7 @@
 			);
 			name = AROverlayExample;
 			productName = AROverlayExample;
-			productReference = 96C334F41353F36900AD25CA /* ColorMyClothes.app */;
+			productReference = 96C334F41353F36900AD25CA /* Holi.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -596,6 +602,8 @@
 				96C335321353FC2600AD25CA /* overlaygraphic.png in Resources */,
 				96C335331353FC2600AD25CA /* takePicture.png in Resources */,
 				5E2D87531471D40500FBDDA0 /* us_pos.tree in Resources */,
+				D74969F9148D9517005AFA30 /* Icon-72.png in Resources */,
+				D74969FA148D9517005AFA30 /* Icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -756,7 +764,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = AROverlayExample/Prefix.pch;
 				INFOPLIST_FILE = AROverlayExample/Info.plist;
-				PRODUCT_NAME = ColorMyClothes;
+				PRODUCT_NAME = Holi;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -770,7 +778,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = AROverlayExample/Prefix.pch;
 				INFOPLIST_FILE = AROverlayExample/Info.plist;
-				PRODUCT_NAME = ColorMyClothes;
+				PRODUCT_NAME = Holi;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

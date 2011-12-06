@@ -53,6 +53,10 @@
 		}
 		else
 			NSLog(@"Couldn't create video input");
+        /*if([videoDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeLocked]) {
+            [videoDevice setWhiteBalanceMode:AVCaptureWhiteBalanceModeLocked];
+            NSLog(@"Lock White Balance");
+        }*/
 	}
 	else
 		NSLog(@"Couldn't create video capture device");
@@ -199,30 +203,37 @@
     NSString * s=@"unknown"; 
     double num=1000000;
     printf("RGB: %f %f %f\n",red*255,green*255,blue*255);
-    [self updateRGB:&num str:&s color:@"black" cr:red cg:green cb:blue r:0 g:0 b:0 leeway:0];
+    [self updateRGB:&num str:&s color:@"black" cr:red cg:green cb:blue r:.1 g:.1 b:.1 leeway:0];
     [self updateRGB:&num str:&s color:@"blue" cr:red cg:green cb:blue r:.2 g:.2 b:.8 leeway:0];
-    [self updateRGB:&num str:&s color:@"light blue" cr:red cg:green cb:blue r:.4 g:.6 b:.9 leeway:0];
-    [self updateRGB:&num str:&s color:@"dark blue" cr:red cg:green cb:blue r:.1 g:.1 b:.5 leeway:0];
+    [self updateRGB:&num str:&s color:@"light blue" cr:red cg:green cb:blue r:.5 g:.7 b:.9 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark blue" cr:red cg:green cb:blue r:.05 g:.05 b:.4 leeway:0];
     [self updateRGB:&num str:&s color:@"red" cr:red cg:green cb:blue r:.8 g:.2 b:.2 leeway:0];
-    [self updateRGB:&num str:&s color:@"pink" cr:red cg:green cb:blue r:.9 g:.4 b:.9 leeway:0];   
+    [self updateRGB:&num str:&s color:@"pink" cr:red cg:green cb:blue r:.9 g:.4 b:.9 leeway:0];  
+    [self updateRGB:&num str:&s color:@"light pink" cr:red cg:green cb:blue r:.95 g:.7 b:.95 leeway:0];  
     [self updateRGB:&num str:&s color:@"maroon" cr:red cg:green cb:blue r:.5 g:.05 b:.05 leeway:0];
     [self updateRGB:&num str:&s color:@"green" cr:red cg:green cb:blue r:.2 g:.8 b:.2 leeway:0];
-    [self updateRGB:&num str:&s color:@"light green" cr:red cg:green cb:blue r:.4 g:.8 b:.4 leeway:0];
-    [self updateRGB:&num str:&s color:@"dark green" cr:red cg:green cb:blue r:.05 g:.5 b:.05 leeway:0];
+    [self updateRGB:&num str:&s color:@"light green" cr:red cg:green cb:blue r:.5 g:.9 b:.5 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark green" cr:red cg:green cb:blue r:.15 g:.25 b:.15 leeway:0];
+    [self updateRGB:&num str:&s color:@"greyish green" cr:red cg:green cb:blue r:.3 g:.5 b:.3 leeway:0];
     //[self updateRGB:&num str:&s color:@"cyan" cr:red cg:green cb:blue r:0 g:.9 b:.9 leeway:0];
     //[self updateRGB:&num str:&s color:@"fuchsia" cr:red cg:green cb:blue r:.7 g:0 b:.7 leeway:0];
     //[self updateRGB:&num str:&s color:@"gold" cr:red cg:green cb:blue r:1 g:.84 b:0 leeway:0];
     [self updateRGB:&num str:&s color:@"grey" cr:red cg:green cb:blue r:.5 g:.5 b:.5 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark grey" cr:red cg:green cb:blue r:.3 g:.3 b:.3 leeway:0];
     //[self updateRGB:&num str:&s color:@"lime" cr:red cg:green cb:blue r:0 g:1 b:0 leeway:0];
     //[self updateRGB:&num str:&s color:@"maroon" cr:red cg:green cb:blue r:.5 g:0 b:0 leeway:0];
     [self updateRGB:&num str:&s color:@"purple" cr:red cg:green cb:blue r:.5 g:.2 b:.5 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark purple" cr:red cg:green cb:blue r:.3 g:.1 b:.3 leeway:0];
     //[self updateRGB:&num str:&s color:@"silver" cr:red cg:green cb:blue r:.75 g:.75 b:.75 leeway:0];
     //[self updateRGB:&num str:&s color:@"teal" cr:red cg:green cb:blue r:0 g:.5 b:.5 leeway:0];
     //[self updateRGB:&num str:&s color:@"turqoise" cr:red cg:green cb:blue r:.19 g:.84 b:.78 leeway:0];
     [self updateRGB:&num str:&s color:@"white" cr:red cg:green cb:blue r:.85 g:.85 b:.85 leeway:0];
-    [self updateRGB:&num str:&s color:@"yellow" cr:red cg:green cb:blue r:.8 g:.8 b:.2 leeway:0];
+    [self updateRGB:&num str:&s color:@"yellow" cr:red cg:green cb:blue r:.9 g:.9 b:.1 leeway:0];
+    [self updateRGB:&num str:&s color:@"light yellow" cr:red cg:green cb:blue r:.95 g:.95 b:.6 leeway:0];
     [self updateRGB:&num str:&s color:@"orange" cr:red cg:green cb:blue r:.8 g:.4 b:.1 leeway:0];
-    [self updateRGB:&num str:&s color:@"brown" cr:red cg:green cb:blue r:.3 g:.2 b:.2 leeway:0];
+    [self updateRGB:&num str:&s color:@"brown" cr:red cg:green cb:blue r:.4 g:.2 b:.1 leeway:0];
+    [self updateRGB:&num str:&s color:@"dark brown" cr:red cg:green cb:blue r:.3 g:.2 b:.1 leeway:0];
+    [self updateRGB:&num str:&s color:@"tan" cr:red cg:green cb:blue r:.9 g:.7 b:.5 leeway:0];
     //[self updateRGB:&num str:&s color:@"pink" cr:red cg:green cb:blue r:1 g:.75 b:.80 leeway:0];
     
     return s;
