@@ -12,4 +12,6 @@
 @property (retain) UIButton *overlayButton;
 @property (retain) UIView *settingsFrame;
 
+- (void) backToMainPanel;
+
 @end

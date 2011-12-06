@@ -97,8 +97,7 @@
 		96C3353D1353FC5000AD25CA /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3353A1353FC5000AD25CA /* CaptureSessionManager.m */; };
 		96C335411353FE1500AD25CA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C335401353FE1500AD25CA /* AVFoundation.framework */; };
 		D74205941486DFAA0058FACA /* RGB.m in Sources */ = {isa = PBXBuildFile; fileRef = D74205931486DFAA0058FACA /* RGB.m */; };
-		D74969F9148D9517005AFA30 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D74969F7148D9517005AFA30 /* Icon-72.png */; };
-		D74969FA148D9517005AFA30 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D74969F8148D9517005AFA30 /* Icon.png */; };
+		D7CC5574148E9A0D0009A196 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D7CC5573148E9A0D0009A196 /* icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -254,8 +253,7 @@
 		96C335401353FE1500AD25CA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D74205921486DFAA0058FACA /* RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGB.h; sourceTree = "<group>"; };
 		D74205931486DFAA0058FACA /* RGB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGB.m; sourceTree = "<group>"; };
-		D74969F7148D9517005AFA30 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		D74969F8148D9517005AFA30 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		D7CC5573148E9A0D0009A196 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -490,6 +488,7 @@
 		96C334FE1353F36900AD25CA /* AROverlayExample */ = {
 			isa = PBXGroup;
 			children = (
+				D7CC556E148E940F0009A196 /* Resources */,
 				5E2D86841471D40500FBDDA0 /* flite-1.4-iphone */,
 				96C335351353FC5000AD25CA /* AppDelegate.h */,
 				96C335361353FC5000AD25CA /* AppDelegate.m */,
@@ -503,8 +502,6 @@
 		96C334FF1353F36900AD25CA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D74969F7148D9517005AFA30 /* Icon-72.png */,
-				D74969F8148D9517005AFA30 /* Icon.png */,
 				96C3353E1353FCE400AD25CA /* Images */,
 				96C3352F1353FBFD00AD25CA /* Prefix.pch */,
 				96C335001353F36900AD25CA /* Info.plist */,
@@ -547,6 +544,14 @@
 				96C335181353F60100AD25CA /* AROverlayViewController.xib */,
 			);
 			name = XIBs;
+			sourceTree = "<group>";
+		};
+		D7CC556E148E940F0009A196 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D7CC5573148E9A0D0009A196 /* icon.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -602,8 +607,7 @@
 				96C335321353FC2600AD25CA /* overlaygraphic.png in Resources */,
 				96C335331353FC2600AD25CA /* takePicture.png in Resources */,
 				5E2D87531471D40500FBDDA0 /* us_pos.tree in Resources */,
-				D74969F9148D9517005AFA30 /* Icon-72.png in Resources */,
-				D74969FA148D9517005AFA30 /* Icon.png in Resources */,
+				D7CC5574148E9A0D0009A196 /* icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
